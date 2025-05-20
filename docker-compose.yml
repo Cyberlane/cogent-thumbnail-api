@@ -18,6 +18,7 @@ services:
     depends_on:
       - db
       - minio
+      - worker
 
   worker:
     build:

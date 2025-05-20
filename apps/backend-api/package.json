@@ -7,13 +7,13 @@
         "start": "bun ./src/index.ts",
         "test": "bun test ./src"
     },
-    "devDependencies": {
-    },
+    "devDependencies": {},
     "peerDependencies": {
         "typescript": "5.7.3"
     },
     "dependencies": {
         "@biomejs/biome": "1.9.4",
-        "zod": "3.24.2"
+        "hono": "4.7.10",
+        "zod": "3.25.7"
     }
 }
