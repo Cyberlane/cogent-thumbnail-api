@@ -1,0 +1,45 @@
+services:
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - path: ../.env
+        required: false
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+  
+  # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
+  # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file:
+      - path: ../.env
+        required: false
+    environment:
+      MINIO_ACCESS_KEY: ${S3_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${S3_SECRET_KEY}
+      MINIO_BUCKET: ${S3_BUCKET}
+    volumes:
+      - minio_data:/data
+      #- ./init-minio.sh:/init-minio.sh
+    command: minio server /data --console-address ":9001"
+    #command: sh -c "/init-minio.sh && server /data"
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  minio_data:
