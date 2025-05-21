@@ -47,4 +47,4 @@ ENV APP_VERSION=$APP_VERSION
 
 # run the app
 EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "src/index.ts" ]
+ENTRYPOINT [ "bash", "start.sh" ]

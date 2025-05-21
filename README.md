@@ -22,7 +22,7 @@ Before running anything, copy the `.env.example` to `.env`.
 
 #### Database
 
-If you already have a Postgres Database you prefer to use, then change the `DB_HOST`, `DB_NAME`, `DB_USER` and `DB_PASSWORD`, otherwise, just leave the existing values.
+If you already have a Postgres Database you prefer to use, then change the `POSTGRES_HOST`, `POSTGRES_DB`, `POSTGRES_USER` and `POSTGRES_PASSWORD`, otherwise, just leave the existing values.
 
 #### S3 Object Storage
 
@@ -104,6 +104,12 @@ I needed a simple Queue system, I have used BullMQ before and it works quite wel
 
 
 ## Trade-Offs
+
+### What to do differently?
+
+I needed to share some files between the Worker and the API, and usually this would be the ideal case for creating a shared package. Given this is a mono repo, that would mean something like Turbo Repo and Workspaces would be the ideal solution, however since I am not running any build steps and only running the code directly, purely to make everything simpler, and I am aware who the audience of this project is, I decided to just add a symlink for the common folder.
+
+However, if this was to be used in a more professional manner, I would add build steps, turbo repo, workspaces, make adjustments to each Dockerfile and copy the correct files over, instead of taking a shortcut and using a symlink.
 
 ### What would be needed to change for Production?
 

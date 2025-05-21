@@ -4,11 +4,8 @@
     "lib": ["ESNext"], // No DOM library for backend
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "noPropertyAccessFromIndexSignature": false
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "drizzle.config.ts"],
   "exclude": ["node_modules"]
 }
