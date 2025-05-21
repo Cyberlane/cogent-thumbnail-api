@@ -6,6 +6,11 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
-  "include": ["src/**/*.ts", "drizzle.config.ts"],
+  "include": [
+    "src/**/*.ts",
+    "drizzle.config.ts",
+    "test/thumbnail.spec.ts",
+    "test/processor.service.test.ts"
+  ],
   "exclude": ["node_modules"]
 }

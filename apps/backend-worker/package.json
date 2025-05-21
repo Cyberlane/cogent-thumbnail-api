@@ -9,13 +9,15 @@
     "db:apply": "drizzle-kit push",
     "lint": "biome lint ./src",
     "lint:fix": "biome lint --write ./src",
-    "test": "bun test ./src"
+    "test:integration": "vitest **/*.integration.test.ts",
+    "test": "vitest **/*.spec.ts"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "1.9.4",
     "@types/bun": "1.2.13",
     "@types/pg": "8.15.2",
-    "@types/uuid": "10.0.0"
+    "@types/uuid": "10.0.0",
+    "vitest": "3.1.4"
   },
   "peerDependencies": {
     "typescript": "5.7.3"
