@@ -4,7 +4,6 @@
     "": {
       "name": "backend-api",
       "dependencies": {
-        "@biomejs/biome": "1.9.4",
         "@hono/swagger-ui": "0.5.1",
         "@hono/zod-openapi": "0.19.6",
         "aws-sdk": "2.1692.0",
@@ -18,6 +17,7 @@
         "zod": "3.25.7",
       },
       "devDependencies": {
+        "@biomejs/biome": "^1.9.4",
         "@types/bun": "1.2.13",
         "@types/pg": "8.15.2",
         "@types/uuid": "10.0.0",

@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import { Pool } from 'pg';
 import { sql } from 'drizzle-orm';
-import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 
 import type { ISchemaService } from './schema.type';

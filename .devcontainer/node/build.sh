@@ -10,6 +10,8 @@ commands=(
     ["backend-worker"]="bun install"
 )
 
+bun install
+
 for dir in "${!commands[@]}"; do
     full_path="$base_dir/$dir"  # Construct the full path
     if [ -d "$full_path" ]; then
