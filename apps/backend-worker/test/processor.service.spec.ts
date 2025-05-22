@@ -5,16 +5,19 @@ import type { IDatabaseService } from '../src/services/database.type';
 import { ProcessorService } from '../src/services/processor.service';
 import type { IStorageService } from '../src/services/storage.type';
 import type { IThumbnailService } from '../src/services/thumbnail.type';
+import type { IUtilService } from '../src/services/util.type';
 
 describe('Processor Service', () => {
   let getByIdMock: Mock;
   let downloadFileMock: Mock;
   let uploadFileMock: Mock;
   let resizeImageMock: Mock;
+  let generateThumbnailIdMock: Mock;
   let databaseService: IDatabaseService;
   let storageService: IStorageService;
   let thumbnailService: IThumbnailService;
   let processor: ProcessorService;
+  let utilService: IUtilService;
 
   const jobData: JobData = {
     dbId: 'job-123',
@@ -35,17 +38,21 @@ describe('Processor Service', () => {
     uploadFileMock = vi.fn();
     storageService = {
       uploadFile: uploadFileMock,
-      getFile: vi.fn(),
       downloadFile: downloadFileMock,
     };
     resizeImageMock = vi.fn();
     thumbnailService = {
       resizeImage: resizeImageMock,
     };
+    generateThumbnailIdMock = vi.fn();
+    utilService = {
+      generateThumbnailId: generateThumbnailIdMock,
+    };
     processor = new ProcessorService(
       databaseService,
       storageService,
       thumbnailService,
+      utilService,
     );
   });
 
@@ -57,11 +64,12 @@ describe('Processor Service', () => {
     downloadFileMock.mockResolvedValue(Buffer.from('image'));
     resizeImageMock.mockResolvedValue(Buffer.from('thumb'));
     uploadFileMock.mockResolvedValue({ url: 'thumb.jpg' });
+    generateThumbnailIdMock.mockReturnValue('thumbnail_123');
 
     await processor.processImage(jobData);
 
     expect(databaseService.getById).toHaveBeenCalledWith('job-123');
-    expect(storageService.downloadFile).toHaveBeenCalledWith('original.jpg');
+    expect(storageService.downloadFile).toHaveBeenCalledWith('job-123');
     expect(thumbnailService.resizeImage).toHaveBeenCalledWith(
       Buffer.from('image'),
       100,
@@ -69,13 +77,13 @@ describe('Processor Service', () => {
       'jpeg',
     );
     expect(storageService.uploadFile).toHaveBeenCalledWith(
-      'thumbnails/job-123.jpeg',
+      'thumbnail_123',
       Buffer.from('thumb'),
     );
     expect(databaseService.update).toHaveBeenCalledWith({
       id: 'job-123',
       status: 'success',
-      thumbnail_url: 'thumb.jpg',
+      thumbnail_id: 'thumbnail_123',
     });
   });
 
@@ -91,7 +99,7 @@ describe('Processor Service', () => {
     expect(databaseService.update).toHaveBeenCalledWith({
       id: 'job-123',
       status: 'error',
-      thumbnail_url: null,
+      thumbnail_id: null,
     });
   });
 

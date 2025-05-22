@@ -4,6 +4,7 @@ import { Error500Schema, JobSchema } from './common.schema'
 
 export const route = createRoute({
   method: 'get',
+  description: 'List all Jobs',
   path: '/jobs',
   responses: {
     200: {

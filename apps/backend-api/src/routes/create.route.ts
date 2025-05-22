@@ -4,6 +4,7 @@ import { Error500Schema, JobSchema } from './common.schema'
 
 export const route = createRoute({
   method: 'post',
+  description: 'Upload a file to create a job',
   path: '/jobs',
   request: {
     body: {

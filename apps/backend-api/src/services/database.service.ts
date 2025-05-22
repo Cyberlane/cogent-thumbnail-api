@@ -16,7 +16,7 @@ export class PostgresDatabaseService implements IDatabaseService {
     this.db = drizzle({ client: pool, schema });
   }
 
-  async getById(id: string): Promise<Job> {
+  async getById(id: string): Promise<Job | undefined> {
     const job = await this.db
       .select()
       .from(schema.jobs)
@@ -24,7 +24,7 @@ export class PostgresDatabaseService implements IDatabaseService {
       .limit(1)
       .execute();
     if (job.length === 0) {
-      throw new Error(`Job with id ${id} not found`);
+      return undefined;
     }
     return job[0];
   }

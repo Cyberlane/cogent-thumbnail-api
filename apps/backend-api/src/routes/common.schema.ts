@@ -1,13 +1,28 @@
 import { z } from '@hono/zod-openapi'
 
+export const HypermediaActionSchema = z.object({
+  name: z.string().openapi({ description: 'The name of the action' }),
+  method: z.enum(['GET', 'POST', 'PUT', 'DELETE']).openapi({ description: 'The HTTP method of the action' }),
+  href: z.string().openapi({ description: 'The URL of the action' }),
+  type: z.string().openapi({ description: 'The content type of the action' }),
+});
+
+export type HypermediaAction = z.infer<typeof HypermediaActionSchema>;
+
 export const JobSchema = z.object({
   id: z.string().openapi({ description: 'The ID of the job' }),
-  status: z.enum(['pending', 'processing', 'completed', 'failed']).openapi({ description: 'The status of the job' }),
-  original_url: z.string().url().openapi({ description: 'The original URL of the image' }),
-  thumbnail_url: z.string().url().optional().openapi({ description: 'The URL of the thumbnail image' }),
-  thumbnail_width: z.number().int().openapi({ description: 'The width of the thumbnail image' }),
-  thumbnail_height: z.number().int().openapi({ description: 'The height of the thumbnail image' }),
-  thumbnail_format: z.enum(['webp', 'jpeg', 'png']).openapi({ description: 'The format of the thumbnail image' }),
+  status: z.enum(['uploaded', 'processing', 'success', 'error']).openapi({ description: 'The status of the job' }),
+  actions: HypermediaActionSchema.array().openapi({
+    description: 'List of actions that can be performed on the job',
+    example: [
+      {
+        name: 'Download',
+        method: 'GET',
+        href: '/jobs/123/download',
+        type: 'application/octet-stream',
+      },
+    ],
+  }),
 }).openapi('Job');
 
 export const Error500Schema = z.object({

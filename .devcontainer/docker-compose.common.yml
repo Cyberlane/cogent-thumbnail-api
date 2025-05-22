@@ -2,6 +2,7 @@ services:
 
   db:
     image: postgres:16
+    container_name: postgres
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -26,6 +27,7 @@ services:
 
   redis:
     image: redis
+    container_name: redis
     restart: unless-stopped
     ports:
       - "6379:6379"

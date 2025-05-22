@@ -37,7 +37,6 @@ describe('API Routes', () => {
     uploadFileMock = vi.fn();
     storageService = {
       uploadFile: uploadFileMock,
-      getFile: vi.fn(),
       downloadFile: vi.fn(),
     };
     queueService = {
@@ -61,7 +60,32 @@ describe('API Routes', () => {
     const data = await response.json();
 
     expect(response.status).toBe(200);
-    expect(data).toEqual(mockJobs);
+    expect(data).toEqual([
+      {
+        id: '1',
+        status: 'pending',
+        actions: [
+          {
+            href: 'http://localhost/jobs/1',
+            method: 'GET',
+            name: 'View Details',
+            type: 'application/json',
+          },
+        ],
+      },
+      {
+        id: '2',
+        status: 'completed',
+        actions: [
+          {
+            href: 'http://localhost/jobs/2',
+            method: 'GET',
+            name: 'View Details',
+            type: 'application/json',
+          },
+        ],
+      },
+    ]);
   });
 
   it('GET /jobs - should handle errors', async () => {
@@ -84,7 +108,17 @@ describe('API Routes', () => {
     const data = await response.json();
 
     expect(response.status).toBe(200);
-    expect(data).toEqual(mockJob);
+    expect(data).toEqual({
+      ...mockJob,
+      actions: [
+        {
+          href: 'http://localhost/jobs/1',
+          method: 'GET',
+          name: 'View Details',
+          type: 'application/json',
+        },
+      ],
+    });
   });
 
   it('GET /jobs/:id - should return 400 if using an invalid ID (not UUID)', async () => {
@@ -157,7 +191,17 @@ describe('API Routes', () => {
     const data = await response.json();
 
     expect(response.status).toBe(201);
-    expect(data).toEqual(mockJob);
+    expect(data).toEqual({
+      ...mockJob,
+      actions: [
+        {
+          href: 'http://localhost/jobs/1',
+          method: 'GET',
+          name: 'View Details',
+          type: 'application/json',
+        },
+      ],
+    });
     expect(createMock).toHaveBeenCalledTimes(1);
     expect(uploadFileMock).toHaveBeenCalledTimes(1);
     expect(getByIdMock).toHaveBeenCalledTimes(1);

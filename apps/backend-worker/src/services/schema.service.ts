@@ -1,9 +1,8 @@
 import path from 'node:path';
 
-import { Pool } from 'pg';
-import { sql } from 'drizzle-orm';
-import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { type NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import { Pool } from 'pg';
 
 import type { ISchemaService } from './schema.type';
 
@@ -24,14 +23,14 @@ export class SchemaService implements ISchemaService {
 
   async runMigrations(): Promise<void> {
     // Set the client_min_messages to WARNING to suppress notices
-    await this.db.execute(sql`SET client_min_messages TO WARNING;`);
+    //await this.db.execute(sql`SET client_min_messages TO WARNING;`);
     // Run the migrations
     await migrate(this.db, {
       migrationsFolder: drizzlePath,
       migrationsTable: 'migrations',
     });
     // Reset the client_min_messages to default
-    await this.db.execute(sql`RESET client_min_messages;`);
+    //await this.db.execute(sql`RESET client_min_messages;`);
     // Close the connection
     await this.conn.end();
   }

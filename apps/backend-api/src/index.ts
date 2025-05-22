@@ -5,7 +5,7 @@ import { BullMqQueueService } from './services/queue.service';
 import { S3StorageService } from './services/storage.service';
 
 // Database connection
-const secureDatabase = env.NODE_ENV === 'production' || env.POSTGRES_SSL;
+const secureDatabase = env.POSTGRES_SSL;
 const baseconnectionString = `postgres://${env.POSTGRES_USER}:${env.POSTGRES_PASSWORD}@${env.POSTGRES_HOST}:${env.POSTGRES_PORT}/${env.POSTGRES_DB}`;
 const connectionString = secureDatabase
   ? `${baseconnectionString}?ssl=true&sslmode=require`

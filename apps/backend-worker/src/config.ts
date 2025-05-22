@@ -8,17 +8,16 @@ const envSchema = z.object({
       z.literal('test'),
     ])
     .default('development'),
-  PORT: z.coerce.number().min(1000).default(3000),
   // Database
   POSTGRES_USER: z.string().min(1),
   POSTGRES_PASSWORD: z.string().min(1),
   POSTGRES_DB: z.string().min(1),
   POSTGRES_HOST: z.string().min(1),
-  POSTGRES_PORT: z.coerce.number().min(1000).default(5432),
-  POSTGRES_SSL: z.coerce.boolean().default(false),
+  POSTGRES_PORT: z.coerce.number().transform(x => x === 0 ? undefined : x).default(5432),
+  POSTGRES_SSL: z.stringbool().default(false),
   // Redis
   REDIS_HOST: z.string().min(1),
-  REDIS_PORT: z.coerce.number().min(1000).default(6379),
+  REDIS_PORT: z.coerce.number().transform(x => x === 0 ? undefined : x).default(6379),
   // S3 Object Storage
   S3_ENDPOINT: z.string().min(1),
   S3_ACCESS_KEY: z.string().min(1),

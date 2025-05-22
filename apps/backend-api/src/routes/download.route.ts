@@ -1,21 +1,24 @@
 import { createRoute } from '@hono/zod-openapi'
 
-import { Error404Schema, Error500Schema, JobSchema } from './common.schema'
-import { ParamsSchema } from './getById.schema'
+import { Error404Schema, Error500Schema } from './common.schema'
+import { ParamsSchema } from './getById.schema';
 
 export const route = createRoute({
   method: 'get',
-  description: 'Get a Job by ID',
-  path: '/jobs/{id}',
+  description: 'Download a Thumbnail',
+  path: '/jobs/{id}/download',
   request: {
     params: ParamsSchema,
   },
   responses: {
     200: {
-      description: 'Job details',
+      description: 'File download',
       content: {
-        'application/json': {
-          schema: JobSchema,
+        'application/octet-stream': {
+          schema: {
+            type: 'string',
+            format: 'binary',
+          },
         }
       }
     },
@@ -23,7 +26,7 @@ export const route = createRoute({
       description: 'Job not found',
       content: {
         'application/json': {
-          schema:  Error404Schema.openapi('Job not found'),
+          schema: Error404Schema.openapi('Job not found'),
         }
       }
     },

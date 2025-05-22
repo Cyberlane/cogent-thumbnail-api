@@ -1,10 +1,43 @@
 services:
+  db:
+    image: postgres:16
+    container_name: postgres
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - path: .env
+        required: false
+  
+  # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
+  # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+      #- ./init-minio.sh:/init-minio.sh
+    command: minio server /data --console-address ":9001"
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
   api:
     build:
-      context: .
-      dockerfile: ./apps/backend-api/Dockerfile
+      context: ./apps/backend-api
+    container_name: cogent-api
     env_file:
-      - path: ./.env
+      - path: ../../.env
         required: false
     environment:
       PORT: 8080
@@ -20,6 +53,7 @@ services:
       S3_ACCESS_KEY: ${S3_ACCESS_KEY}
       S3_SECRET_KEY: ${S3_SECRET_KEY}
       S3_BUCKET: ${S3_BUCKET}
+      QUEUE_PROCESS_THUMBNAIL: ${QUEUE_PROCESS_THUMBNAIL}
     ports:
       - '8080:8080'
     depends_on:
@@ -29,10 +63,10 @@ services:
 
   worker:
     build:
-      context: .
-      dockerfile: ./apps/backend-worker/Dockerfile
+      context: ./apps/backend-worker
+    container_name: cogent-worker
     env_file:
-      - path: ./.env
+      - path: ../../.env
         required: false
     environment:
       PORT: 8181
@@ -54,3 +88,12 @@ services:
     depends_on:
       - db
       - minio
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  minio_data:
+  redis-data:

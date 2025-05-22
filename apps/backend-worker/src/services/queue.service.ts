@@ -11,14 +11,14 @@ export class BullMqQueueService implements IQueueService {
     const redis = new Redis(port, host, {
       maxRetriesPerRequest: null
     });
-    this.worker = new Worker<JobData>(queueName, this.processJob, { connection: redis, autorun: false });
+    this.worker = new Worker<JobData>(queueName, (job) => this.processJob(job), { connection: redis, autorun: false });
     this.worker.on('failed', this.handleError);
   }
 
   private async processJob(job: Job<JobData, unknown, string>): Promise<void> {
     // Simulate a long-running task
     await new Promise(resolve => setTimeout(resolve, 5000));
-
+    
     await this.processorService.processImage(job.data);
 
     // Fetch the record from the database
