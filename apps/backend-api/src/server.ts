@@ -85,7 +85,11 @@ export const createServer = (
       if (!buffer) {
         return c.json({ message: 'Not Found' }, 404);
       }
-      return c.body(buffer, 200);
+      return c.body(buffer, 200, {
+        'Content-Type': 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="${id}.${item.thumbnail_format}"`,
+        'Content-Length': buffer.length.toString(),
+      });
     } catch (error: unknown) {
       console.error(error);
       return c.json({ error: 'Internal Server Error' }, 500);
