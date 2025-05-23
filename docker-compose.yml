@@ -72,11 +72,11 @@ services:
     ports:
       - '8080:8080'
     depends_on:
-      - db:
+      db:
         condition: service_healthy
-      - minio:
+      minio:
         condition: service_healthy
-      - redis
+      redis:
         condition: service_healthy
 
   worker:
@@ -103,11 +103,11 @@ services:
     ports:
       - '8181:8181'
     depends_on:
-      - db:
+      db:
         condition: service_healthy
-      - minio:
+      minio:
         condition: service_healthy
-      - redis:
+      redis:
         condition: service_healthy
 
 networks:
