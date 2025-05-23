@@ -25,7 +25,6 @@ services:
       - "9001:9001"
     volumes:
       - minio_data:/data
-      - ./init-minio.sh:/init-minio.sh
     env_file:
       - path: .env
         required: true
