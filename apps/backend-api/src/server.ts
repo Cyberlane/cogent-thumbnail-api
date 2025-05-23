@@ -78,10 +78,10 @@ export const createServer = (
     const { id } = c.req.param();
     try {
       const item = await databaseService.getById(id);
-      if (!item) {
+      if (!item || item.thumbnail_id == null) {
         return c.json({ message: 'Not Found' }, 404);
       }
-      const buffer = await storageService.downloadFile(id);
+      const buffer = await storageService.downloadFile(item.thumbnail_id);
       if (!buffer) {
         return c.json({ message: 'Not Found' }, 404);
       }
