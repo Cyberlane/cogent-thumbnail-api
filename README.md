@@ -277,7 +277,9 @@ If you already have a Postgres Database you prefer to use, then change the `POST
 
 If you already have some S3 Object storage, please update the `S3_ENDPOINT`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` and `S3_BUCKET` accordingly.
 
-If you do not have that, then please follow the steps in [`docs/minio-setup.md`](docs/minio-setup.md) to configure MinIO.
+A script has been added to automatically configure access key, secret and a bucket for MinIO to make development faster (see the [init-minio.sh](/init-minio.sh)).
+
+However, if you want to skip using that and do everything manually, then please follow the steps in [`docs/minio-setup.md`](docs/minio-setup.md) to configure MinIO.
 
 ### Development Environment
 
