@@ -25,13 +25,29 @@ services:
       - "9001:9001"
     volumes:
       - minio_data:/data
-      #- ./init-minio.sh:/init-minio.sh
+      - ./init-minio.sh:/init-minio.sh
+    env_file:
+      - path: .env
+        required: true
     command: minio server /data --console-address ":9001"
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
       interval: 5s
       timeout: 5s
       retries: 5
+
+  minio-console:
+    image: minio/mc
+    container_name: minio-console
+    volumes:
+      - ./init-minio.sh:/init-minio.sh
+    env_file:
+      - path: .env
+        required: true
+    entrypoint: ['/bin/sh', '/init-minio.sh']
+    depends_on:
+      minio:
+        condition: service_healthy
 
   redis:
     image: redis
@@ -76,6 +92,8 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
+      minio-console:
+        condition: service_completed_successfully
       redis:
         condition: service_healthy
 
@@ -107,6 +125,8 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
+      minio-console:
+        condition: service_completed_successfully
       redis:
         condition: service_healthy
 
