@@ -7,7 +7,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
     env_file:
       - path: .env
-        required: false
+        required: true
   
   # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
   # (Adding the "ports" property to this file will not forward from a Codespace.)
@@ -37,8 +37,8 @@ services:
       context: ./apps/backend-api
     container_name: cogent-api
     env_file:
-      - path: ../../.env
-        required: false
+      - path: .env
+        required: true
     environment:
       PORT: 8080
       POSTGRES_HOST: ${POSTGRES_HOST}
@@ -66,8 +66,8 @@ services:
       context: ./apps/backend-worker
     container_name: cogent-worker
     env_file:
-      - path: ../../.env
-        required: false
+      - path: .env
+        required: true
     environment:
       PORT: 8181
       POSTGRES_HOST: ${POSTGRES_HOST}
