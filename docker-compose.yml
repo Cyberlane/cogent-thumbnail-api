@@ -8,6 +8,11 @@ services:
     env_file:
       - path: .env
         required: true
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   
   # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
   # (Adding the "ports" property to this file will not forward from a Codespace.)
@@ -22,7 +27,11 @@ services:
       - minio_data:/data
       #- ./init-minio.sh:/init-minio.sh
     command: minio server /data --console-address ":9001"
-    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis
@@ -32,6 +41,12 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   api:
     build:
       context: ./apps/backend-api
@@ -57,9 +72,12 @@ services:
     ports:
       - '8080:8080'
     depends_on:
-      - db
-      - minio
-      - worker
+      - db:
+        condition: service_healthy
+      - minio:
+        condition: service_healthy
+      - redis
+        condition: service_healthy
 
   worker:
     build:
@@ -69,7 +87,6 @@ services:
       - path: .env
         required: true
     environment:
-      PORT: 8181
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -86,8 +103,12 @@ services:
     ports:
       - '8181:8181'
     depends_on:
-      - db
-      - minio
+      - db:
+        condition: service_healthy
+      - minio:
+        condition: service_healthy
+      - redis:
+        condition: service_healthy
 
 networks:
   default:
